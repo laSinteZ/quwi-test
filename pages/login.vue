@@ -10,47 +10,65 @@
         .title Login
         .login-form
           h1.logo Q
-          form
-            validation-provider(
-              name="email"
-              rules="required|email"
-              v-slot="{ validate, errors }"
-            )
-              .field(:class="{'has-error': errors[0]}")
-                .placeholder(v-show="errors[0] || email") {{ errors[0] ? errors[0] : 'Email' }}
-                input(
-                  @blur="validate"
-                  v-model="email"
-                  type="text"
-                  placeholder="email"
-                )
-            validation-provider(
-              name="password"
-              rules="required"
-              v-slot="{ validate, errors }"
-            )
-              .field(:class="{'has-error': errors[0]}")
-                .placeholder(v-show="errors[0] || password") {{ errors[0] ? errors[0] : 'Password' }}
-                input(
-                  @blur="validate"
-                  v-model="password"
-                  type="password"
-                  placeholder="password"
-                )
-            button.button.fullwidth login
+          validation-observer(v-slot="{ validate }")
+            form(@submit.prevent="validate().then(login)")
+              validation-provider(
+                name="email"
+                rules="required|email"
+                v-slot="{ validate, errors }"
+              )
+                .field(:class="{'has-error': errors[0]}")
+                  .placeholder(v-show="errors[0] || email") {{ errors[0] ? errors[0] : 'Email' }}
+                  input(
+                    @blur="validate"
+                    v-model="email"
+                    type="text"
+                    placeholder="email"
+                    autofocus
+                  )
+              validation-provider(
+                name="password"
+                rules="required"
+                v-slot="{ validate, errors }"
+              )
+                .field(:class="{'has-error': errors[0]}")
+                  .placeholder(v-show="errors[0] || password") {{ errors[0] ? errors[0] : 'Password' }}
+                  input(
+                    @blur="validate"
+                    v-model="password"
+                    type="password"
+                    placeholder="password"
+                  )
+              button.button.fullwidth login
 </template>
 
 <script>
-import { ValidationProvider } from 'vee-validate'
+import { ValidationProvider, ValidationObserver } from 'vee-validate'
+import { mapActions } from 'vuex'
 
 export default {
   components: {
-    ValidationProvider
+    ValidationProvider,
+    ValidationObserver
   },
   data() {
     return {
       email: '',
       password: ''
+    }
+  },
+  methods: {
+    ...mapActions(['setTokenAndCookie']),
+    login() {
+      this.$axios
+        .post('https://api.quwi.com/v2/auth/login', {
+          email: this.email,
+          password: this.password
+        })
+        .then(({ data }) => {
+          this.setTokenAndCookie(data.token)
+          this.$router.push('/')
+        })
     }
   }
 }
