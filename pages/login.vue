@@ -31,21 +31,9 @@ export default {
 }
 </script>
 
-<style lang="scss">
-$lighter-gray: #fafafa;
-$light-gray: #f4f4f4;
-$gray: #e0e0e0;
-$dark-gray: #7c7c7c;
-$darker-gray: #636363;
-
-$red: #c44512;
-$form-red: #d40000;
-
-$light-blue: #b7cae2;
-$blue: #4b84da;
-$dark-blue: #2668c1;
-
-$navbar-height: 2.875rem;
+<style lang="scss" scoped>
+@import '~assets/css/navbar.scss';
+@import '~assets/css/variables.scss';
 
 button.button {
   font-size: 1.125rem;
@@ -96,52 +84,6 @@ button.button {
     }
   }
 }
-.navbar {
-  position: fixed;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 20px;
-  width: 100%;
-  height: $navbar-height;
-  background: $lighter-gray;
-  box-shadow: 0 1px 1px $dark-gray;
-
-  .left,
-  .right {
-    height: 100%;
-  }
-
-  .left {
-    .logo {
-      display: flex;
-      align-items: center;
-      height: 100%;
-      color: black;
-      text-decoration: none;
-      font-weight: 700;
-      font-size: 1.75rem;
-    }
-  }
-
-  .right {
-    .link {
-      display: flex;
-      align-items: center;
-      padding: 0 15px;
-      height: 100%;
-      color: $darker-gray;
-      text-decoration: none;
-      text-transform: uppercase;
-      font-size: 0.7rem;
-      &:hover {
-        background: $gray;
-        color: $red;
-      }
-    }
-  }
-}
 
 .main {
   padding-top: $navbar-height;
@@ -162,6 +104,7 @@ button.button {
       background: white;
       box-shadow: 0 0 9px 0 rgba(0, 0, 0, 0.19);
       .logo {
+        pointer-events: none;
         margin-bottom: 20px;
         text-align: center;
         font-weight: 700;

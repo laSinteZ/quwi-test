@@ -1,0 +1,50 @@
+@import 'variables.scss';
+
+.navbar {
+  position: fixed;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  width: 100%;
+  height: $navbar-height;
+  background: $lighter-gray;
+  box-shadow: 0 1px 1px $dark-gray;
+
+  .left,
+  .right {
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .left {
+    .logo {
+      display: flex;
+      align-items: center;
+      height: 100%;
+      color: black;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 1.75rem;
+    }
+  }
+
+  .right {
+    .link {
+      display: flex;
+      align-items: center;
+      padding: 0 15px;
+      height: 100%;
+      color: $darker-gray;
+      text-decoration: none;
+      text-transform: uppercase;
+      font-size: 0.7rem;
+      &:hover {
+        background: $gray;
+        color: $red;
+      }
+    }
+  }
+}
