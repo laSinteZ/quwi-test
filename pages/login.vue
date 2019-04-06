@@ -11,17 +11,42 @@
         .login-form
           h1.logo Q
           form
-            .field
-              .placeholder(v-show="email") Email
-              input(v-model="email" type="text" placeholder="email")
-            .field
-              .placeholder(v-show="password") Password
-              input(v-model="password" type="password" placeholder="password")
+            validation-provider(
+              name="email"
+              rules="required|email"
+              v-slot="{ validate, errors }"
+            )
+              .field(:class="{'has-error': errors[0]}")
+                .placeholder(v-show="errors[0] || email") {{ errors[0] ? errors[0] : 'Email' }}
+                input(
+                  @blur="validate"
+                  v-model="email"
+                  type="text"
+                  placeholder="email"
+                )
+            validation-provider(
+              name="password"
+              rules="required"
+              v-slot="{ validate, errors }"
+            )
+              .field(:class="{'has-error': errors[0]}")
+                .placeholder(v-show="errors[0] || password") {{ errors[0] ? errors[0] : 'Password' }}
+                input(
+                  @blur="validate"
+                  v-model="password"
+                  type="password"
+                  placeholder="password"
+                )
             button.button.fullwidth login
 </template>
 
 <script>
+import { ValidationProvider } from 'vee-validate'
+
 export default {
+  components: {
+    ValidationProvider
+  },
   data() {
     return {
       email: '',
