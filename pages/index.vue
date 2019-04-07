@@ -32,7 +32,10 @@ export default {
         projects: projects.map(x => x.data.project)
       }
     } catch (e) {
-      error({ statusCode: e.statusCode || 404, message: e.message })
+      error({
+        statusCode: e.response.status,
+        message: e.message
+      })
     }
   }
 }

@@ -68,7 +68,7 @@ export default {
         id: params.id
       }
     } catch (e) {
-      error({ statusCode: e.statusCode || 404, message: e.message })
+      error({ statusCode: e.response.status, message: e.message })
     }
   },
   mounted() {
