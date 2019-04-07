@@ -22,13 +22,17 @@ export default {
   components: {
     ProjectEntry
   },
-  async asyncData({ $axios }) {
-    const { data } = await $axios.get('projects-manage')
-    const projects = await Promise.all(
-      data.projects.map(x => $axios.get(`projects-manage/${x.id}`))
-    )
-    return {
-      projects: projects.map(x => x.data.project)
+  async asyncData({ $axios, error }) {
+    try {
+      const { data } = await $axios.get('projects-manage')
+      const projects = await Promise.all(
+        data.projects.map(x => $axios.get(`projects-manage/${x.id}`))
+      )
+      return {
+        projects: projects.map(x => x.data.project)
+      }
+    } catch (e) {
+      error({ statusCode: e.statusCode || 404, message: e.message })
     }
   }
 }

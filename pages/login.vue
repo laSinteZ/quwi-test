@@ -4,7 +4,6 @@
       .left
         a.logo(href="https://quwi.com") Q
       .right
-        a.link(href="#") Signup
     main.main
       .login-form-container
         .title Login
@@ -17,8 +16,8 @@
                 rules="required|email"
                 v-slot="{ validate, errors }"
               )
-                .field(:class="{'has-error': errors[0]}")
-                  .placeholder(v-show="errors[0] || email") {{ errors[0] ? errors[0] : 'Email' }}
+                .field(:class="{'has-error': loginError || errors[0]}")
+                  .placeholder(v-show="loginError || errors[0] || email") {{ loginError ? loginError : errors[0] ? errors[0] : 'Email' }}
                   input(
                     @blur="validate"
                     v-model="email"
@@ -55,19 +54,34 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
+      isLoading: false,
+      loginError: null
     }
   },
   methods: {
     ...mapActions(['setTokenAndCookie']),
     async login() {
-      const { data } = await this.$axios.post('auth/login', {
-        email: this.email,
-        password: this.password
-      })
+      const TIMEOUT = 3000
 
-      this.setTokenAndCookie(data.token)
-      this.$router.push('/')
+      this.isLoading = true
+
+      try {
+        const { data } = await this.$axios.post('auth/login', {
+          email: this.email,
+          password: this.password
+        })
+
+        this.setTokenAndCookie(data.token)
+        this.$router.push('/')
+      } catch (error) {
+        this.loginError = error.response.data
+          ? error.response.data.first_errors.email
+          : error
+        setTimeout(() => (this.loginError = null), TIMEOUT)
+      } finally {
+        this.isLoading = false
+      }
     }
   }
 }

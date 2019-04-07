@@ -2,12 +2,34 @@
   div
     header.navbar
       .left
-        a.logo(href="https://quwi.com") Q
+        nuxt-link.logo(to="/") Q
       .right
         nuxt-link.link(to="/") Projects
-        a.link(href="#") Logout
-    nuxt.main
+        .link(@click="logout") Logout
+    .main
+      nuxt.container
 </template>
+
+<script>
+import { mapActions } from 'vuex'
+
+export default {
+  methods: {
+    ...mapActions({ stateLogout: 'logout' }),
+    async logout() {
+      try {
+        await this.$axios.post('auth/logout', {
+          anywhere: false
+        })
+      } catch (e) {
+      } finally {
+        this.stateLogout()
+        this.$router.push('/login')
+      }
+    }
+  }
+}
+</script>
 
 <style lang="scss" scoped>
 @import '~assets/css/navbar.scss';
@@ -17,5 +39,9 @@
   padding-top: $navbar-height;
   min-height: 100vh;
   background: $light-gray;
+  .container {
+    margin: 15px auto 50px;
+    max-width: 600px;
+  }
 }
 </style>

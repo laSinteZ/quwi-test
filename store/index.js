@@ -1,5 +1,5 @@
 import cookieparser from 'cookieparser'
-import cookie from 'js-cookie'
+import Cookie from 'js-cookie'
 
 const TYPES = {
   SET_AUTH: 'Setting auth token'
@@ -28,7 +28,13 @@ export const actions = {
 
   setTokenAndCookie({ commit }, token) {
     commit(TYPES.SET_AUTH, token)
-    cookie.set('auth', token)
+    Cookie.set('auth', token)
     this.$axios.setToken(token, 'Bearer')
+  },
+
+  logout({ commit }) {
+    commit(TYPES.SET_AUTH, null)
+    Cookie.remove('auth')
+    this.$axios.setToken(false)
   }
 }

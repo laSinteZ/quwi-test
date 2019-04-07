@@ -4,6 +4,10 @@
     :class="{'is-inactive': !isActive}"
   )
     .logo
+      project-logo(
+        :title="title"
+        :logo="logo"
+      )
     .title {{ title }}
     .status(:class="{'is-active': isActive}") {{ isActive ? 'Active' : 'Inactive'}}
     .time
@@ -19,7 +23,12 @@
 </template>
 
 <script>
+import ProjectLogo from '@/components/ProjectLogo'
+
 export default {
+  components: {
+    ProjectLogo
+  },
   filters: {
     formatTime: function(value) {
       const hours = Math.floor(value / 3600)
@@ -94,8 +103,6 @@ export default {
   .logo {
     width: 40px;
     height: 40px;
-    border-radius: 9999px;
-    background: #9400d3;
     margin-right: 15px;
   }
 
@@ -106,7 +113,8 @@ export default {
 
   .status {
     font-weight: bold;
-    flex-grow: 1;
+    min-width: 10rem;
+    width: 10rem;
     text-align: center;
     color: #777;
     &.is-active {
