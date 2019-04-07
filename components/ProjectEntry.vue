@@ -1,26 +1,69 @@
 <template lang="pug">
-  .project-wrapper(@click="navigate")
+  .project-wrapper(
+    @click="navigate"
+    :class="{'is-inactive': !isActive}"
+  )
     .logo
-    .title Super Project
-    .status Active
+    .title {{ title }}
+    .status(:class="{'is-active': isActive}") {{ isActive ? 'Active' : 'Inactive'}}
     .time
       .entry-row
         .title time this week
-        .value 00:00:00
+        .value {{ timeWeek | formatTime }}
       .entry-row
         .title this month
-        .value 00:00:00
+        .value {{ timeMonth | formatTime }}
       .entry-row
         .title total
-        .value 00:00:00
+        .value {{ timeAll | formatTime }}
 </template>
 
 <script>
 export default {
+  filters: {
+    formatTime: function(value) {
+      const hours = Math.floor(value / 3600)
+      const minutes = Math.floor((value - 3600 * hours) / 60)
+      const seconds = value - hours * 3600 - minutes * 60
+
+      return `${hours < 10 ? '0' + hours : hours}:${
+        minutes < 10 ? '0' + minutes : minutes
+      }:${seconds < 10 ? '0' + seconds : seconds}`
+    }
+  },
+  props: {
+    id: {
+      required: true,
+      type: Number
+    },
+    title: {
+      required: true,
+      type: String
+    },
+    logo: {
+      type: String,
+      default: ''
+    },
+    isActive: {
+      type: Boolean,
+      required: true
+    },
+    timeWeek: {
+      type: Number,
+      required: true
+    },
+    timeMonth: {
+      type: Number,
+      required: true
+    },
+    timeAll: {
+      type: Number,
+      required: true
+    }
+  },
   methods: {
     navigate() {
-      const id = 11
-      this.$router.push({ name: 'edit-id', params: { id } })
+      this.$router.push({ name: 'edit-id', params: { id: this.id } })
     }
   }
 }
@@ -33,10 +76,15 @@ export default {
   flex-direction: row;
   justify-content: space-between;
   padding: 18px 20px 20px 25px;
+  margin-bottom: 6px;
   border: 1px solid #dedede;
   border-radius: 3px;
   background: white;
   font-size: 0.75rem;
+
+  &.is-inactive {
+    opacity: 0.5;
+  }
 
   &:hover {
     background: #ececec;
@@ -60,6 +108,10 @@ export default {
     font-weight: bold;
     flex-grow: 1;
     text-align: center;
+    color: #777;
+    &.is-active {
+      color: green;
+    }
   }
 
   .time {

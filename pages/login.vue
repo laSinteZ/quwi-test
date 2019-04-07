@@ -51,6 +51,7 @@ export default {
     ValidationProvider,
     ValidationObserver
   },
+  middleware: 'notAuthenticated',
   data() {
     return {
       email: '',
@@ -59,16 +60,14 @@ export default {
   },
   methods: {
     ...mapActions(['setTokenAndCookie']),
-    login() {
-      this.$axios
-        .post('https://api.quwi.com/v2/auth/login', {
-          email: this.email,
-          password: this.password
-        })
-        .then(({ data }) => {
-          this.setTokenAndCookie(data.token)
-          this.$router.push('/')
-        })
+    async login() {
+      const { data } = await this.$axios.post('auth/login', {
+        email: this.email,
+        password: this.password
+      })
+
+      this.setTokenAndCookie(data.token)
+      this.$router.push('/')
     }
   }
 }

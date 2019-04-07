@@ -20,17 +20,15 @@ export const actions = {
     let auth = null
     if (req.headers.cookie) {
       const parsed = cookieparser.parse(req.headers.cookie)
-      try {
-        auth = JSON.parse(parsed.auth)
-      } catch (err) {
-        // No valid cookie found
-      }
+      auth = parsed.auth
     }
     commit(TYPES.SET_AUTH, auth)
+    this.$axios.setToken(auth, 'Bearer')
   },
 
   setTokenAndCookie({ commit }, token) {
     commit(TYPES.SET_AUTH, token)
     cookie.set('auth', token)
+    this.$axios.setToken(token, 'Bearer')
   }
 }
