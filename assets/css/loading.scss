@@ -1,0 +1,21 @@
+
+$size: 25px;
+$width: 2px;
+
+.spinner {
+  height: $size;
+  width: $size;
+  border: $width solid rgba(1, 1, 1, 0.3);
+  border-top-color:white;
+  border-radius: 100%;
+  animation: rotation .9s infinite linear 0.25s;
+}
+
+@keyframes rotation {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}

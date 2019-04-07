@@ -1,7 +1,7 @@
 <template lang="pug">
   .wrapper
     .button.back(@click="$router.go(-1)") ← Back
-    validation-observer(v-slot="{ validate }")
+    validation-observer(v-slot="{ validate, invalid }")
       form(@submit.prevent="validate().then(saveName)")
         validation-provider(
           name="name"
@@ -22,8 +22,11 @@
                 autocomplete="false"
                 spellcheck="false"
               )
-              .button(@click="validate().then(saveName)")
-                .loading(v-if="isLoading") LD
+              .button(
+                @click="validate().then(saveName)"
+                :class="{disabled: invalid || isLoading}"
+              )
+                .spinner(v-if="isLoading")
                 span(v-else) OK
             project-logo(
               :title="name"
@@ -100,13 +103,17 @@ export default {
 <style lang="scss" scoped>
 @import '~assets/css/variables.scss';
 @import '~assets/css/transitions.scss';
+@import '~assets/css/loading.scss';
 
 $label-width: 80px;
 
 .button {
   margin-left: 5px;
   text-align: center;
-  padding: 12px 16px;
+  height: 37px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   min-width: 50px;
   outline: none;
   border: none;
@@ -120,6 +127,11 @@ $label-width: 80px;
   cursor: pointer;
   &:hover {
     opacity: 0.7;
+  }
+  &.disabled {
+    opacity: 0.8;
+    pointer-events: none;
+    cursor: not-allowed;
   }
   &.back {
     background: white;

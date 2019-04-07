@@ -9,7 +9,7 @@
         .title Login
         .login-form
           h1.logo Q
-          validation-observer(v-slot="{ validate }")
+          validation-observer(v-slot="{ validate, invalid }")
             form(@submit.prevent="validate().then(login)")
               validation-provider(
                 name="email"
@@ -24,6 +24,7 @@
                     type="text"
                     placeholder="email"
                     autofocus
+                    autocomplete="username"
                   )
               validation-provider(
                 name="password"
@@ -37,8 +38,13 @@
                     v-model="password"
                     type="password"
                     placeholder="password"
+                    autocomplete="current-password"
                   )
-              button.button.fullwidth login
+              button.button.fullwidth(
+                :class="{disabled: invalid || isLoading}"
+               )
+                .spinner(v-if="isLoading")
+                span(v-else) login
 </template>
 
 <script>
@@ -90,12 +96,16 @@ export default {
 <style lang="scss" scoped>
 @import '~assets/css/navbar.scss';
 @import '~assets/css/variables.scss';
+@import '~assets/css/loading.scss';
 
 button.button {
   font-size: 1.125rem;
   border-radius: 9px;
   background: $dark-blue;
-  padding: 15px;
+  height: 53px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   color: white;
   outline: none;
   cursor: pointer;
@@ -104,6 +114,11 @@ button.button {
   }
   &.fullwidth {
     width: 100%;
+  }
+  &.disabled {
+    opacity: 0.8;
+    pointer-events: none;
+    cursor: not-allowed;
   }
 }
 
